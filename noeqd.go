@@ -182,7 +182,7 @@ func auth(r io.Reader) error {
 		return errInvalidRequest
 	}
 
-	b = make([]byte, b[1])
+	b = make([]byte, int(b[1]))
 	_, err = io.ReadFull(r, b)
 	if err != nil {
 		return err
