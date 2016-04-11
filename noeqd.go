@@ -1,4 +1,4 @@
-package main
+package noeqd
 
 import (
 	"errors"
@@ -13,8 +13,8 @@ import (
 )
 
 var (
-	ErrInvalidRequest = errors.New("invalid request")
-	ErrInvalidAuth    = errors.New("invalid auth")
+	errInvalidRequest = errors.New("invalid request")
+	errInvalidAuth = errors.New("invalid auth")
 )
 
 var (
@@ -48,13 +48,8 @@ var (
 	mu  sync.Mutex
 	seq int64
 )
-
-func main() {
-	parseFlags()
-	acceptAndServe(mustListen())
-}
-
-func parseFlags() {
+// ParseFlags parse commandline args
+func ParseFlags() {
 	flag.Parse()
 	if *wid < 0 || *wid > maxWorkerId {
 		log.Fatalf("worker id must be between 0 and %d", maxWorkerId)
@@ -65,7 +60,8 @@ func parseFlags() {
 	}
 }
 
-func mustListen() net.Listener {
+// MustListen returns tcp listener
+func MustListen() net.Listener {
 	l, err := net.Listen("tcp", *laddr)
 	if err != nil {
 		log.Fatal(err)
@@ -73,7 +69,8 @@ func mustListen() net.Listener {
 	return l
 }
 
-func acceptAndServe(l net.Listener) {
+// AcceptAndServe accept the listener
+func AcceptAndServe(l net.Listener) {
 	for {
 		cn, err := l.Accept()
 		if err != nil {
@@ -109,7 +106,7 @@ func serve(r io.Reader, w io.Writer) error {
 		n := uint(c[0])
 		if n == 0 {
 			// No authing at this point
-			return ErrInvalidRequest
+			return errInvalidRequest
 		}
 
 		b := make([]byte, n*8)
@@ -182,7 +179,7 @@ func auth(r io.Reader) error {
 	}
 
 	if b[0] != 0 {
-		return ErrInvalidRequest
+		return errInvalidRequest
 	}
 
 	b = make([]byte, b[1])
@@ -192,7 +189,7 @@ func auth(r io.Reader) error {
 	}
 
 	if string(b) != token {
-		return ErrInvalidAuth
+		return errInvalidAuth
 	}
 
 	return nil
