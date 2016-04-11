@@ -13,8 +13,8 @@ import (
 )
 
 var (
-	ErrInvalidRequest = errors.New("invalid request")
-	ErrInvalidAuth    = errors.New("invalid auth")
+	errInvalidRequest = errors.New("invalid request")
+	errInvalidAuth = errors.New("invalid auth")
 )
 
 var (
@@ -104,7 +104,7 @@ func serve(r io.Reader, w io.Writer) error {
 		n := uint(c[0])
 		if n == 0 {
 			// No authing at this point
-			return ErrInvalidRequest
+			return errInvalidRequest
 		}
 
 		b := make([]byte, n*8)
@@ -177,7 +177,7 @@ func auth(r io.Reader) error {
 	}
 
 	if b[0] != 0 {
-		return ErrInvalidRequest
+		return errInvalidRequest
 	}
 
 	b = make([]byte, b[1])
@@ -187,7 +187,7 @@ func auth(r io.Reader) error {
 	}
 
 	if string(b) != token {
-		return ErrInvalidAuth
+		return errInvalidAuth
 	}
 
 	return nil
