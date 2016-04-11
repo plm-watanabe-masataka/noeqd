@@ -48,8 +48,8 @@ var (
 	mu  sync.Mutex
 	seq int64
 )
-
-func parseFlags() {
+// ParseFlags parse commandline args
+func ParseFlags() {
 	flag.Parse()
 	if *wid < 0 || *wid > maxWorkerId {
 		log.Fatalf("worker id must be between 0 and %d", maxWorkerId)
@@ -60,7 +60,8 @@ func parseFlags() {
 	}
 }
 
-func mustListen() net.Listener {
+// MustListen returns tcp listener
+func MustListen() net.Listener {
 	l, err := net.Listen("tcp", *laddr)
 	if err != nil {
 		log.Fatal(err)
@@ -68,7 +69,8 @@ func mustListen() net.Listener {
 	return l
 }
 
-func acceptAndServe(l net.Listener) {
+// AcceptAndServe accept the listener
+func AcceptAndServe(l net.Listener) {
 	for {
 		cn, err := l.Accept()
 		if err != nil {
