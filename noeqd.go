@@ -1,4 +1,4 @@
-package main
+package noeqd
 
 import (
 	"errors"
@@ -48,11 +48,6 @@ var (
 	mu  sync.Mutex
 	seq int64
 )
-
-func main() {
-	parseFlags()
-	acceptAndServe(mustListen())
-}
 
 func parseFlags() {
 	flag.Parse()
